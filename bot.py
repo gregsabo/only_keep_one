@@ -31,5 +31,4 @@ if __name__ == "__main__":
         tweet = crawl()
         if tweet:
             twitter.tweet(tweet)
-        time.sleep(60) # 6 hours
-        #time.sleep(21600) # 6 hours
+        time.sleep(21600 + random.randint(0, 21600)) # wait 6-12 hours
