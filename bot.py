@@ -1,5 +1,6 @@
 import os
 import time
+from crawl import crawl
 
 import tweepy
 
@@ -26,7 +27,8 @@ class TwitterAPI:
 
 if __name__ == "__main__":
     twitter = TwitterAPI()
-    twitter.tweet("Hello world!") #You probably want to remove this line
     while True:
-        #Send a tweet here!
-        time.sleep(60)
+        tweet = crawl()
+        if tweet:
+            twitter.tweet()
+        time.sleep(43200)
