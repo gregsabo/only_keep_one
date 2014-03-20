@@ -156,7 +156,10 @@ def version_two(in_text):
             return extracted.strip()
             
 def crawl():
-    return version_two(get_book_page())
+    try:
+        return version_two(get_book_page())
+    except Exception:
+        return None
 
 if __name__ == "__main__":
     output = version_two(get_book_page())
