@@ -72,7 +72,7 @@ def is_boring(text):
         return True
     for word in boring_blacklist.split():
         if word in lowered:
-            print "Too boring: (%s)" % word, text
+            print "Too boring:", word, "in", text
             return True
 
     for word in trailing_blacklist.split():
