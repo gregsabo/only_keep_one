@@ -31,4 +31,5 @@ if __name__ == "__main__":
         tweet = crawl()
         if tweet:
             twitter.tweet(tweet)
-        time.sleep(43200) # 12 hours
+        time.sleep(60)
+        #time.sleep(43200) # 12 hours
