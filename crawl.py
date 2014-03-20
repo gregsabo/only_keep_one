@@ -58,6 +58,9 @@ def text_with_newlines(elem):
             text += e.strip()
         elif e.name == 'br':
             text += '\n'
+        else:
+            if not (text.endswith(" ")):
+                text += ' '
     return text
 
 
@@ -75,8 +78,13 @@ def read_file_as_string():
                 started = True
     return None
 
-boring_blacklist = "book now xxx 20 page download day home learn refund contact credit purchase wait chapter risk"
-trailing_blacklist = "and the a an are"
+def pos_tagged(text):
+    return requests.post("http://text-processing.com/api/tag/", dict(text=text.lower())).json()['text']
+
+boring_blacklist = "money tips buy price book now xxx 20 page download day home learn refund contact credit purchase wait chapter risk"
+starting_blacklist = "to and but overr"
+pos_trailing_blacklist = "RB WHT IN TO DT CC PRP PRP$ VB VBD VBN VBZ JJ"
+pos_anywhere_blacklist = "LS"
 def is_boring(text):
     lowered = text.strip().lower()
     if len(lowered.split()) < 3:
@@ -86,12 +94,24 @@ def is_boring(text):
             print "Too boring: (%s)" % word, text
             return True
 
-    for word in trailing_blacklist.split():
+    for word in starting_blacklist.split():
         if lowered.startswith(word + ' '):
             print 'started with', word, ':', text
             return True
-        if lowered.endswith(' ' + word):
-            print 'ended with', word, ':', text
+
+    tagged = pos_tagged(text).strip()
+    if "CD" in tagged:
+        print "contains number:", text
+        return True
+
+    for pos in pos_trailing_blacklist.split():
+        if tagged.endswith('/' + pos + ')'):
+            print 'ended with POS', pos, ':', text
+            return True
+
+    for pos in pos_anywhere_blacklist.split():
+        if ('/' + pos) in tagged:
+            print 'contained POS', pos, ':', text
             return True
 
     if lowered.count('.') + lowered.count(',') + lowered.count('!') > 1:
@@ -119,13 +139,13 @@ def extract_substring_of_words(in_text):
         if tweet.strip().endswith("."):
             if random.random() < 0.9:
                 print 'stopping at a period'
-                return tweet.replace('.', '')
+                return tweet
             else:
                 print "ended with a period, but fuck it"
         tweet = new_tweet
     print 'giving up'
 
-blacklist = "refund arts category $ { } < > account mailman risk taken"
+blacklist = "login refund arts category $ { } < > account mailman risk taken"
 
 def contains_bad_word(line):
     lowered = line.lower()
@@ -153,8 +173,14 @@ def version_two(in_text):
             if is_boring(extracted):
                 continue
             print "extracting from", line
-            return extracted.strip()
-            
+            extracted = extracted.replace('"', "")
+            extracted = extracted.replace("-", " ")
+            extracted = extracted.strip()
+            if extracted.endswith('.') and random.random() < 0.9:
+                print 'killing the last period.'
+                extracted = extracted[:-1]
+            return extracted
+
 def crawl():
     try:
         return version_two(get_book_page())
