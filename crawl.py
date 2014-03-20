@@ -117,7 +117,7 @@ def extract_substring_of_words(in_text):
         if i > 3 and (random.random() < 0.1):
             return tweet
         if tweet.strip().endswith("."):
-            if random.random() < 0.8:
+            if random.random() < 0.9:
                 print 'stopping at a period'
                 return tweet.replace('.', '')
             else:
