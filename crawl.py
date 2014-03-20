@@ -32,8 +32,19 @@ def get_book_link_from_url(url):
             continue
         return "http://buy-ebook.com/" + href
 
+def paginate_category(url):
+    soup = BeautifulSoup(requests.get(url).text)
+    for table in reversed(soup.find_all("table")):
+        if "More results" in table.get_text():
+            res = random.choice(table.find_all("a")).get("href")
+            print "paging to", res
+            return res
+    print "Giving up on page, just using first page"
+    return url
+
+
 def get_book_page():
-    book_href = get_book_link_from_url(get_random_link_from_url("http://buy-ebook.com"))
+    book_href = get_book_link_from_url(paginate_category(get_random_link_from_url("http://buy-ebook.com")))
     print "CRAWLING", book_href
     soup = BeautifulSoup(requests.get(book_href).text)
 
@@ -72,7 +83,7 @@ def is_boring(text):
         return True
     for word in boring_blacklist.split():
         if word in lowered:
-            print "Too boring:", word, "in", text
+            print "Too boring: (%s)" % word, text
             return True
 
     for word in trailing_blacklist.split():
@@ -143,7 +154,7 @@ def version_two(in_text):
                 continue
             print "extracting from", line
             return extracted.strip()
-
+            
 def crawl():
     return version_two(get_book_page())
 
