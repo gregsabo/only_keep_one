@@ -1,4 +1,5 @@
 import os
+import random
 import time
 from crawl import crawl
 
