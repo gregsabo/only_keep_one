@@ -1,6 +1,8 @@
-The Heroku Twitter-bot Starter Kit
+Only Keep One
 =========================
 
-Get yourself a Twitter bot up and running in no time!
+It tweets things. Strange, wonderous things.
 
-Just run the `init.sh` script, follow the instructions, and you'll be good to go.
+More info in the [blog post](http://www.doesnotcompute.biz/no-spambot-could-ever-be-as-funny-as-horse_ebooks).
+
+Thanks a bunch to [zwass](https://github.com/zwass/heroku-twitterbot-starter) for the helpful bootstrap code.
